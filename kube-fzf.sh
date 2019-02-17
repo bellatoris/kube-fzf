@@ -80,7 +80,7 @@ _kube_fzf_handler() {
 _kube_fzf_fzf_args() {
   local search_query=$1
   local extra_args=$2
-  local fzf_args="--height=10 --ansi --reverse $extra_args"
+  local fzf_args="--height=30 --ansi --reverse $extra_args"
   [ -n "$search_query" ] && fzf_args="$fzf_args --query=$search_query"
   echo "$fzf_args"
 }
@@ -112,7 +112,7 @@ _kube_fzf_search_pod() {
 
     namespace=${namespace:=default}
     pod_name=$(kubectl get pod --namespace=$namespace --no-headers \
-        | fzf $(echo $pod_fzf_args) \
+        | fzf $(echo $pod_fzf_args) --preview "echo {} | cut -d ' ' -f 1 - | xargs kubectl -n $namespace describe pods" \
       | awk '{ print $1 }')
   fi
 
